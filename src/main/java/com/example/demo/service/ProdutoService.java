@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.model.ProdutoModel;
+import com.example.demo.repository.PedidoRepository;
 import com.example.demo.repository.ProdutoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class ProdutoService {
     
     private final ProdutoRepository produtoRepository;
+    private final PedidoRepository pedidoRepository;
 
     public ProdutoModel criarProduto(ProdutoModel produto){
         return produtoRepository.save(produto);
@@ -44,6 +46,10 @@ public class ProdutoService {
     }
 
     public void excluirProduto(long id){
+        if(pedidoRepository.existsByProdutosId(id))
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "Produto está em pedidos e não pode ser excluído");
         produtoRepository.deleteById(id);
     }
 

@@ -34,7 +34,7 @@ public class PagamentoService {
                 "Pedido não encontrado: " + pedidoId
             ));
 
-        if (pagamentoRepository.existsById(pedidoId)) {
+        if (pagamentoRepository.existsByPedidoId(pedidoId)) {
             throw new ResponseStatusException(
                 HttpStatus.CONFLICT,
                 "Este pedido já possui um pagamento"

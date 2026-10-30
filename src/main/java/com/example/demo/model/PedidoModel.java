@@ -34,6 +34,7 @@ public class PedidoModel {
     )
     private List<ProdutoModel> produtos = new ArrayList<>();
 
-    @OneToOne(mappedBy = "pedido")
+    // Excluir o pedido também exclui o pagamento dele
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.REMOVE)
     private PagamentoModel pagamento;
 }
