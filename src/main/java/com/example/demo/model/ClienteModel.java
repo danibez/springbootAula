@@ -25,6 +25,8 @@ public class ClienteModel {
     @GeneratedValue 
     private long id;
     private String username;
+
+    @JsonIgnore
     private String password;
 
     @JsonIgnore

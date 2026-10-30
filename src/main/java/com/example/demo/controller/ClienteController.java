@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.ClienteRequest;
+import com.example.demo.dto.ClienteResponse;
 import com.example.demo.model.ClienteModel;
 import com.example.demo.service.ClienteService;
 
@@ -28,19 +30,27 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping("/novoCliente")
-    public ClienteModel novoCliente(@RequestBody ClienteModel cliente) throws Exception {        
-        return clienteService.createCliente(cliente);
+    public ClienteResponse novoCliente(@RequestBody ClienteRequest cliente) throws Exception {  
+        ClienteModel clienteNovo = new ClienteModel();
+        clienteNovo.setPassword(cliente.getPassword());
+        clienteNovo.setUsername(cliente.getUsername());
+
+        ClienteModel clienteSalvo = clienteService.createCliente(clienteNovo);
+
+        return ClienteResponse.from(clienteSalvo);
     }
 
     @GetMapping("/all")
-    public List<ClienteModel> getAllClients() {
-        return clienteService.getAllClients();
+    public List<ClienteResponse> getAllClients() {
+        return clienteService.getAllClients().stream().
+                        map(ClienteResponse::from).toList();
     }
     
 
     @GetMapping("/cliente/{id}")
-    public ClienteModel findById(@PathVariable long id) {
-        return clienteService.findClienteById(id);
+    public ClienteResponse findById(@PathVariable long id) {
+        ClienteModel cliente = clienteService.findClienteById(id);
+        return ClienteResponse.from(cliente);
     }
     
     @DeleteMapping("/cliente/{id}")
